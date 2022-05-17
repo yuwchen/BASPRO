@@ -25,7 +25,7 @@ preprocessing.general_filter("/path/to/raw_data.txt")
 * The processed file will be saved as {file_name}_s1.txt
 * Automatically add indexes to all sentences
 
-*input format:sentence*
+*input format:sentence*  
 *output format:Idx#sentence*
 
 ### Step 2 POS Filtering
