@@ -31,18 +31,6 @@ preprocessing.general_filter("/path/to/raw_data.txt")
 ***
 ### Step 2 POS Filtering
 
-* Remove sentences contain words longer than 5 characters 
-( Most Chinese words are less than five characters) 
-* Remove sentences contain duplicate words 
-* Select sentences candidate based on POS tagging
-
-POS removal criteria
-| toolkit | include                           | start          | end                             |
-|---------|-----------------------------------|----------------|---------------------------------|
-| ckip    | 'Nb','Nc','FW'                    | 'DE','SHI','T' | 'Caa','Cab','Cba','Cbb','P','T' |
-| baidu   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
-
-
 #### Word segmentation & Get POS tags 
 
 Segmentation:
@@ -77,10 +65,22 @@ output files will be saved as {input_file_name}_baidu.txt
 Additional requirement (Conversions between Traditional Chinese, Simplified Chinese):
 * [opencc](https://github.com/BYVoid/OpenCC) 
 
+# require further testing, cannot run ddparser on Mac M1
+
 
 #### Filtering
 
-* Consider the results of jieda or ckip or baidu
+* Remove sentences contain words longer than 5 characters 
+( Most Chinese words are less than five characters) 
+* Remove sentences contain duplicate words 
+* Select sentences candidate based on POS tags
+
+POS removal criteria
+| toolkit | include                           | start          | end                             |
+|---------|-----------------------------------|----------------|---------------------------------|
+| ckip    | 'Nb','Nc','FW'                    | 'DE','SHI','T' | 'Caa','Cab','Cba','Cbb','P','T' |
+| baidu   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
+
 ```
 preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
 #only use segmentation for filtering
@@ -90,19 +90,10 @@ preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_r
 #use both segmentation and POS tagging for filtering
 
 ```
-output files will be saved as {input_file_name}_s2.txt
+output files will be saved as {input_file_name}_{pos}_s2.txt
+* if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt
 *input & output format: Idx#sentence#word segmentation#pos tags*
 
-* Consider the results of jieda & ckip & baidu
-```
-preprocessing.pos_seg_filter(jieba_path="/path/to/raw_data_s1_jieba.txt",
-                             ckip_path="/path/to/raw_data_s1_ckip.txt",
-                             baidu_path="/path/to/raw_data_s1_baidu.txt",
-                             pos="all", save_rm=True)
-
-```
-output files will be saved as results_s2.txt  
-*input & output format: Idx#sentence#word segmentation#pos tags*
 
 ***
 ### Step 3 Sensitive Word Filtering
@@ -120,7 +111,7 @@ preprocessing.sensitive_filter(input_file_path, save_rm=True)
 
 * Calculate perplexity scores
 ```
-get_perplexity(input_file_path)
+perplexity.get_perplexity(input_file_path)
 ```
 
 output files will be saved as {file_name}_per.txt  
