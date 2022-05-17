@@ -78,6 +78,8 @@ Additional requirement (Conversions between Traditional Chinese, Simplified Chin
 
 
 #### Filtering
+
+* Consider the results of jieda or ckip or baidu
 ```
 preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
 #only use segmentation for filtering
@@ -90,9 +92,7 @@ preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_r
 output files will be saved as {input_file_name}_s2.txt
 *input & output format: Idx#sentence#word segmentation#pos tags*
 
-
-#### Intersect the result (optional)
-Consider the results of jieda & ckip & baidu
+* Consider the results of jieda & ckip & baidu
 ```
 preprocessing.pos_seg_filter(jieba_path="/path/to/raw_data_s1_jieba.txt",
                              ckip_path="/path/to/raw_data_s1_ckip.txt",
