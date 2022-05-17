@@ -31,22 +31,35 @@ preprocessing.general_filter("/path/to/raw_data.txt")
 * Select sentences candidate based on POS tagging
 
 
-Word segmentation & Get POS tags 
+#### Word segmentation & Get POS tags 
 
-#### Segmentation:
+Segmentation:
 * [jieba](https://github.com/fxsjy/jieba)
 ```
+preprocessing.jieba_seg("/path/to/raw_data_filtered.txt")
 ```
+output files will be saved as {input_file_name}_\jieba.txt
 
-#### Segmentation & POS tagging:
+Segmentation & POS tagging:
 * [ddparser](https://github.com/baidu/DDParser)
 * [opencc](https://github.com/BYVoid/OpenCC) (Conversions between Traditional Chinese, Simplified Chinese)
 
 ```
+preprocessing.baidu_seg("/path/to/raw_data_filtered.txt")
 ```
+
 * [ckiptagger](https://github.com/ckiplab/ckiptagger)
+
 ```
+preprocessing.ckip_seg("/path/to/raw_data_filtered.txt")
 ```
+
+#### Filtering
+```
+preprocessing.pos_seg_filter("/path/to/raw_data_ckip.txt", pos=True)
+
+```
+
 
 ### Step 3 Sensitive Word Filtering
 * Remove sentences contain sensitive words
