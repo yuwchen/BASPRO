@@ -65,7 +65,7 @@ output files will be saved as {input_file_name}_baidu.txt
 Additional requirement (Conversions between Traditional Chinese, Simplified Chinese):
 * [opencc](https://github.com/BYVoid/OpenCC) 
 
-# require further testing, cannot run ddparser on Mac M1
+(Require further testing, cannot run ddparser on Mac M1)
 
 
 #### Filtering
