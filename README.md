@@ -135,7 +135,7 @@ preprocessing.perplexity_filter(input_file_path, save_rm=True)
 *input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*   
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
-
+***
 ### Step 5 ASR Filtering
 
 * Select candidate sentences based on the predictions of ASR systems
