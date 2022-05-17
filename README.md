@@ -115,14 +115,21 @@ preprocessing.sensitive_filter(input_file_path, save_rm=True)
 
 
 ### Step 4 Perplexity Filtering
+
+* Calculate perplexity scores
+```
+get_perplexity(input_file_path)
+```
+output files will be saved as {file_name}_per.txt
+*input format: Idx#sentence{#word segmentation#pos tags}* 
+*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score* 
+
 * Remove sentences have high perplexity
 ```
 preprocessing.perplexity_filter(input_file_path, save_rm=True)
-
 ```
-*input format: Idx#sentence{#word segmentation#pos tags}*
-*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*
-
+*input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
+*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score* 
 
 
 ### Step 5 ASR Filtering
