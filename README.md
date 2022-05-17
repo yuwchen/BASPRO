@@ -28,6 +28,7 @@ preprocessing.general_filter("/path/to/raw_data.txt")
 *input format: sentence*  
 *output format: Idx#sentence*
 
+***
 ### Step 2 POS Filtering
 
 * Remove sentences contain words longer than 5 characters 
@@ -100,10 +101,10 @@ preprocessing.pos_seg_filter(jieba_path="/path/to/raw_data_s1_jieba.txt",
                              pos="all", save_rm=True)
 
 ```
-output files will be saved as results_s2.txt
+output files will be saved as results_s2.txt  
 *input & output format: Idx#sentence#word segmentation#pos tags*
 
-
+***
 ### Step 3 Sensitive Word Filtering
 * Remove sentences contain sensitive words
   (See sensitive_word_list.txt for details)
@@ -111,25 +112,28 @@ output files will be saved as results_s2.txt
 ```
 preprocessing.sensitive_filter(input_file_path, save_rm=True)
 ```
+
 *input & output format: Idx#sentence{#word segmentation#pos tags}*
 
-
+***
 ### Step 4 Perplexity Filtering
 
 * Calculate perplexity scores
 ```
 get_perplexity(input_file_path)
 ```
-output files will be saved as {file_name}_per.txt
-*input format: Idx#sentence{#word segmentation#pos tags}* 
-*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score* 
+
+output files will be saved as {file_name}_per.txt  
+*input format: Idx#sentence{#word segmentation#pos tags}*  
+*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
 * Remove sentences have high perplexity
 ```
 preprocessing.perplexity_filter(input_file_path, save_rm=True)
 ```
-*input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
-*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score* 
+
+*input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*   
+*output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
 
 ### Step 5 ASR Filtering
