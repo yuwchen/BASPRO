@@ -58,9 +58,9 @@ output files will be saved as {input_file_name}_ckip.txt
 ```
 preprocessing.baidu_seg("/path/to/result_s1.txt")
 ```
-output files will be saved as {input_file_name}_baidu.txt
-*input format: Idx#sentence#word segmentation*
-*output format: Idx#sentence#word segmentation#pos tags*
+output files will be saved as {input_file_name}_baidu.txt  
+*input format: Idx#sentence#word segmentation*  
+*output format: Idx#sentence#word segmentation#pos tags*  
 
 Additional requirement (Conversions between Traditional Chinese, Simplified Chinese):
 * [opencc](https://github.com/BYVoid/OpenCC) 
@@ -81,8 +81,8 @@ POS removal criteria
 | ckip    | 'Nb','Nc','FW'                    | 'DE','SHI','T' | 'Caa','Cab','Cba','Cbb','P','T' |
 | baidu   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
 
-ckip POS tag: https://github.com/ckiplab/ckiptagger/wiki/POS-Tags
-baidu POS tag: https://github.com/baidu/lac
+ckip POS tag: https://github.com/ckiplab/ckiptagger/wiki/POS-Tags  
+baidu POS tag: https://github.com/baidu/lac    
 
 ```
 preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
