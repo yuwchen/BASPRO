@@ -81,6 +81,9 @@ POS removal criteria
 | ckip    | 'Nb','Nc','FW'                    | 'DE','SHI','T' | 'Caa','Cab','Cba','Cbb','P','T' |
 | baidu   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
 
+ckip POS tag: https://github.com/ckiplab/ckiptagger/wiki/POS-Tags
+baidu POS tag: https://github.com/baidu/lac
+
 ```
 preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
 #only use segmentation for filtering
