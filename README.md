@@ -139,23 +139,31 @@ preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 
 * Select candidate sentences based on the predictions of ASR systems
 #### Step 4-1: Text to Speech
-option(a): [Gtts](https://github.com/pndurette/gTTS)
-option(b): [Paddle Speech](https://github.com/PaddlePaddle/PaddleSpeech)
-option(c): [ttskit](https://github.com/kuangdd/ttskit)
-option(d): [zhtts](https://github.com/Jackiexiao/zhtts)
 
-| Toolkit       | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
-|---------------|---------|-------------------------------|--------------------------|----------------|
-| gtts          | High    | Fast (but has limited access) | V                        |Female          |
-| paddle speech |         |                               | X                        |Female          | 
-| ttskit        |         |                               |                          |Male & Female   |
-| zhtts         |         |                               | V                        |Female          |
+| Toolkit                                                      | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
+|--------------------------------------------------------------|---------|-------------------------------|--------------------------|----------------|
+| [Gtts](https://github.com/pndurette/gTTS)                    | High    | Fast<br>(but has limited access, ~2s/sample) | V         |Female        |
+| [Paddle Speech](https://github.com/PaddlePaddle/PaddleSpeech)|         |                               | X                        |Male & Female   | 
+| [ttskit](https://github.com/kuangdd/ttskit)                  |         |                               |                          |Male & Female   |
+| [zhtts](https://github.com/Jackiexiao/zhtts)                 | Low     |                               | V                        |Female          |
+
 
 ```
-text2speech.tts_gtts(input_file_path, save_info=True)
+text2speech.tts_gtts(input_file_path, save_info=True, convert_format=True)
 text2speech.tts_paddle(input_file_path, save_info=True)
 text2speech.tts_ttskit(input_file_path, save_info=True)
 text2speech.tts_zhtts(input_file_path, save_info=True)
+```
+PaddleSpeech & TTSkit & Zhtts:
+(Require further testing, cannot run on  Mac M1)
+
+Gtts:
+. The original Gtts output format might have some problem when loading with python. 
+. Load the Gtts output waveform using librosa.load(/wav/file/path)
+. Install ffmpeg if encounter audioread.exceptions.NoBackendError when using librosa
+. Set convert_format=True to convert the gtts output wavform
+```
+conda install -c conda-forge ffmpeg
 ```
 
 . save_info=True will save the mapping between wavefile index and content in ttx_info_{toolkit}.txt  
@@ -182,7 +190,7 @@ Idx2#有沒有包含斷詞不影響#...#...#...
 │   ...
 └── IdxN.wav
 ```
-
+. output file will be save as result_asr.txt
 
 #### Step 4-3: Select sentences base based on the intelligibility scores 
 ```
