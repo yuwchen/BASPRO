@@ -38,7 +38,7 @@ Segmentation:
 ```
 preprocessing.jieba_seg("/path/to/result_s1.txt")
 ```
-output files will be saved as {input_file_name}_jieba.txt
+. output files will be saved as {input_file_name}_jieba.txt
 *input format: Idx#sentence*
 *output format: Idx#sentence#word segmentation*
 
@@ -49,7 +49,7 @@ Segmentation & POS tagging:
 ```
 preprocessing.ckip_seg("/path/to/result_s1.txt")
 ```
-output files will be saved as {input_file_name}_ckip.txt
+. output files will be saved as {input_file_name}_ckip.txt
 *input format: Idx#sentence#word segmentation*
 *output format: Idx#sentence#word segmentation#pos tags*
 
@@ -58,7 +58,7 @@ output files will be saved as {input_file_name}_ckip.txt
 ```
 preprocessing.baidu_seg("/path/to/result_s1.txt")
 ```
-output files will be saved as {input_file_name}_baidu.txt  
+. output files will be saved as {input_file_name}_baidu.txt  
 *input format: Idx#sentence#word segmentation*  
 *output format: Idx#sentence#word segmentation#pos tags*  
 
@@ -93,7 +93,7 @@ preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_r
 #use both segmentation and POS tagging for filtering
 
 ```
-output files will be saved as {input_file_name}_{pos}_s2.txt  
+. output files will be saved as {input_file_name}_{pos}_s2.txt  
 * if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt  
 *input & output format: Idx#sentence#word segmentation#pos tags*  
 
@@ -108,7 +108,7 @@ e.g.
 preprocessing.sensitive_filter("./result_s1_ckip_s2.txt", save_rm=True)
 ```
 
-output file will be saved as result_s3.txt
+. output file will be saved as result_s3.txt
 *input & output format: Idx#sentence#word segmentation{#pos tags}*  
 
 ***
@@ -121,7 +121,7 @@ e.g.
 preprocessing.get_perplexity("./result_s3.txt")
 ```
 
-output files will be saved as {file_name}_per.txt  
+. output files will be saved as {file_name}_per.txt  
 *input format: Idx#sentence{#word segmentation#pos tags}*  
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
@@ -129,8 +129,8 @@ output files will be saved as {file_name}_per.txt
 ```
 preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 ```
-. th: threhold of perplexity filtering, default value is 4.0
-. output files will be saved as result_s4.txt
+. th: threhold of perplexity filtering, default value is 4.0  
+. output files will be saved as result_s4.txt  
 *input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*   
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
@@ -169,9 +169,9 @@ text2speech.tts_zhtts(input_file_path, save_info=True)
 preprocessing.calculate_asr(input_file_path, wav_dir_path)
 
 ```
-. this step might take a long time to fininsh
-. the index in the input_file_path should match the file name in the wave file directory
-e.g.
+. this step might take a long time to fininsh  
+. the index in the input_file_path should match the file name in the wave file directory  
+e.g.  
 ```
 * input_file_path
 Idx1#第一句話的範例有十字#...#...#...
