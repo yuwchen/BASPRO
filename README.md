@@ -93,28 +93,32 @@ preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_r
 #use both segmentation and POS tagging for filtering
 
 ```
-output files will be saved as {input_file_name}_{pos}_s2.txt
-* if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt
-*input & output format: Idx#sentence#word segmentation#pos tags*
+output files will be saved as {input_file_name}_{pos}_s2.txt  
+* if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt  
+*input & output format: Idx#sentence#word segmentation#pos tags*  
 
 
 ***
 ### Step 3 Sensitive Word Filtering
-* Remove sentences contain sensitive words
-  (See sensitive_word_list.txt for details)
+* Remove sentences contain sensitive words (See sensitive_word_list.txt for details)
   
 ```
-preprocessing.sensitive_filter(input_file_path, save_rm=True)
+preprocessing.sensitive_filter("/path/to/inputfile", save_rm=True)
+e.g.
+preprocessing.sensitive_filter("./result_s1_ckip_s2.txt", save_rm=True)
 ```
 
-*input & output format: Idx#sentence{#word segmentation#pos tags}*
+output file will be saved as result_s3.txt
+*input & output format: Idx#sentence#word segmentation{#pos tags}*  
 
 ***
 ### Step 4 Perplexity Filtering
 
 * Calculate perplexity scores
 ```
-perplexity.get_perplexity(input_file_path)
+preprocessing.get_perplexity("/path/to/inputfile")
+e.g.
+preprocessing.get_perplexity("./result_s3.txt")
 ```
 
 output files will be saved as {file_name}_per.txt  
@@ -123,9 +127,10 @@ output files will be saved as {file_name}_per.txt
 
 * Remove sentences have high perplexity
 ```
-preprocessing.perplexity_filter(input_file_path, save_rm=True)
+preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 ```
-
+. th: threhold of perplexity filtering, default value is 4.0
+. output files will be saved as result_s4.txt
 *input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*   
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
@@ -139,18 +144,54 @@ option(b): [Paddle Speech](https://github.com/PaddlePaddle/PaddleSpeech)
 option(c): [ttskit](https://github.com/kuangdd/ttskit)
 option(d): [zhtts](https://github.com/Jackiexiao/zhtts)
 
-| Toolkit       | Quality | Speed                         | Support Taiwanese Accent |
-|---------------|---------|-------------------------------|--------------------------|
-| gtts          | High    | Fast (but has limited access) | V                        |
-| paddle speech |         |                               | X                        |
-| ttskit        |         |                               |                         |
-| zhtts         |         |                               | V                        |
+| Toolkit       | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
+|---------------|---------|-------------------------------|--------------------------|----------------|
+| gtts          | High    | Fast (but has limited access) | V                        |Female          |
+| paddle speech |         |                               | X                        |Female          | 
+| ttskit        |         |                               |                          |Male & Female   |
+| zhtts         |         |                               | V                        |Female          |
 
+```
+text2speech.tts_gtts(input_file_path, save_info=True)
+text2speech.tts_paddle(input_file_path, save_info=True)
+text2speech.tts_ttskit(input_file_path, save_info=True)
+text2speech.tts_zhtts(input_file_path, save_info=True)
+```
+
+. save_info=True will save the mapping between wavefile index and content in ttx_info_{toolkit}.txt  
+. output waveform will be save in {file_name}_{toolkit} directory  
+. this step might take a long time to fininsh  
+*input format: Idx#sentence{#word segmentation#pos tags#perplexity_score}*  
 
 
 #### Step 4-2: Calculate the intelligibility scores based on ASR results 
-#### Step 4-3: Select sentences base based on the intelligibility scores 
+```
+preprocessing.calculate_asr(input_file_path, wav_dir_path)
 
+```
+. this step might take a long time to fininsh
+. the index in the input_file_path should match the file name in the wave file directory
+e.g.
+```
+* input_file_path
+Idx1#第一句話的範例有十字#...#...#...
+Idx2#有沒有包含斷詞不影響#...#...#...
+* wav_dir_path
+├── Idx1.wav (TTS results of the sentence "第一句話的範例有十字")
+├── Idx2.wav (TTS results of the sentence "有沒有包含斷詞不影響")
+│   ...
+└── IdxN.wav
+```
+
+
+#### Step 4-3: Select sentences base based on the intelligibility scores 
+```
+preprocessing.intelligibility_filter(input_file_path, save_rm=True, th=1.0)
+```
+th: threhold of intelligibility filtering, default value is 1.0
+output files will be saved as result_s5.txt
+*input format: Idx#sentence{#word segmentation#pos tags#perplexity_score]#intelligibility_score*   
+*output format: Idx#sentence{#word segmentation#pos tags#perplexity_score}#intelligibility_score*  
 
 ## Sampling
 
