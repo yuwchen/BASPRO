@@ -20,26 +20,29 @@ import preprocessing
 preprocessing.general_filter(input_file_path)
 
 e.g.
-preprocessing.general_filter("/path/to/raw_data.txt")
+preprocessing.general_filter("/path/to/raw_data.txt") 
+
 ```
 * The processed file will be saved as result_s1.txt
-* Automatically add indexes to all sentences
 
 *input format: sentence*  
-*output format: Idx#sentence*
+*output format: sentence*
 
 ***
 ### Step 2 POS Filtering
 
 #### Word segmentation & Get POS tags 
 
+* Automatically add indexes to all sentences
+
 Segmentation:
+
 * [jieba](https://github.com/fxsjy/jieba)
 ```
 preprocessing.jieba_seg("/path/to/result_s1.txt")
 ```
 . output files will be saved as {input_file_name}_jieba.txt
-*input format: Idx#sentence*
+*input format: sentence*
 *output format: Idx#sentence#word segmentation*
 
 Segmentation & POS tagging:
@@ -50,7 +53,7 @@ Segmentation & POS tagging:
 preprocessing.ckip_seg("/path/to/result_s1.txt")
 ```
 . output files will be saved as {input_file_name}_ckip.txt
-*input format: Idx#sentence#word segmentation*
+*input format: sentence
 *output format: Idx#sentence#word segmentation#pos tags*
 
 (2)[ddparser](https://github.com/baidu/DDParser)
@@ -59,7 +62,7 @@ preprocessing.ckip_seg("/path/to/result_s1.txt")
 preprocessing.baidu_seg("/path/to/result_s1.txt")
 ```
 . output files will be saved as {input_file_name}_baidu.txt  
-*input format: Idx#sentence#word segmentation*  
+*input format: sentence
 *output format: Idx#sentence#word segmentation#pos tags*  
 
 Additional requirement (Conversions between Traditional Chinese, Simplified Chinese):
@@ -68,12 +71,20 @@ Additional requirement (Conversions between Traditional Chinese, Simplified Chin
 (Require further testing, cannot run ddparser on Mac M1)
 
 
-#### Filtering
+### Filtering
 
-* Remove sentences contain words longer than 5 characters 
-( Most Chinese words are less than five characters) 
-* Remove sentences contain duplicate words 
-* Select sentences candidate based on POS tags
+(1) Remove sentences contain words longer than 5 characters (Most Chinese words are less than five characters)  
+(2) Remove sentences contain duplicate words  
+(3) Remove sentences end or contain certain words  
+
+Removal criteria 
+|                      |                                                                                                                 |
+|----------------------|-----------------------------------------------------------------------------------------------------------------|
+| first character      | '二','三','四','五','六','七','八','九','十','也','於','為','還','都','連','並','而','但','再'                        |
+| first two characters | '而且','於是','就是','無論','因為','其中','為了','儘管','所以','甚至','還是','在於','如果','因此','可能','例如'            |
+| in the middle        | '吧','嗎','呢','啊','啥'                                                                                          |
+
+(4) Select sentences candidate based on POS tags
 
 POS removal criteria
 | toolkit | include                           | start          | end                             |
@@ -83,6 +94,7 @@ POS removal criteria
 
 ckip POS tag: https://github.com/ckiplab/ckiptagger/wiki/POS-Tags  
 baidu POS tag: https://github.com/baidu/lac    
+
 
 ```
 preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
@@ -94,7 +106,8 @@ preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_r
 
 ```
 . output files will be saved as {input_file_name}_{pos}_s2.txt  
-* if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt  
+. if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt  
+. edit **pos_seg_filter** function in **preprocessing.py** if you want to use other criteria  
 *input & output format: Idx#sentence#word segmentation#pos tags*  
 
 
@@ -138,7 +151,7 @@ preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 ### Step 5 ASR Filtering
 
 * Select candidate sentences based on the predictions of ASR systems
-#### Step 4-1: Text to Speech
+#### Step 5-1: Text to Speech
 
 | Toolkit                                                      | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
 |--------------------------------------------------------------|---------|-------------------------------|--------------------------|----------------|
@@ -172,7 +185,7 @@ conda install -c conda-forge ffmpeg
 *input format: Idx#sentence{#word segmentation#pos tags#perplexity_score}*  
 
 
-#### Step 4-2: Calculate the intelligibility scores based on ASR results 
+#### Step 5-2: Calculate the intelligibility scores based on ASR results 
 ```
 preprocessing.calculate_asr(input_file_path, wav_dir_path)
 
@@ -181,10 +194,11 @@ preprocessing.calculate_asr(input_file_path, wav_dir_path)
 . the index in the input_file_path should match the file name in the wave file directory  
 e.g.  
 ```
-* input_file_path
+* input_file.txt
 Idx1#第一句話的範例有十字#...#...#...
 Idx2#有沒有包含斷詞不影響#...#...#...
-* wav_dir_path
+
+* wav_dir
 ├── Idx1.wav (TTS results of the sentence "第一句話的範例有十字")
 ├── Idx2.wav (TTS results of the sentence "有沒有包含斷詞不影響")
 │   ...
@@ -192,7 +206,7 @@ Idx2#有沒有包含斷詞不影響#...#...#...
 ```
 . output file will be save as result_asr.txt
 
-#### Step 4-3: Select sentences base based on the intelligibility scores 
+#### Step 5-3: Select sentences base based on the intelligibility scores 
 ```
 preprocessing.intelligibility_filter(input_file_path, save_rm=True, th=1.0)
 ```
@@ -200,6 +214,58 @@ th: threhold of intelligibility filtering, default value is 1.0
 output files will be saved as result_s5.txt
 *input format: Idx#sentence{#word segmentation#pos tags#perplexity_score]#intelligibility_score*   
 *output format: Idx#sentence{#word segmentation#pos tags#perplexity_score}#intelligibility_score*  
+
+## Data preparation
+
+### Calculate statistics for text corpus
+```
+preprocessing.calculate_statistics("/path/to/raw_data.txt")
+```
+input format: sentence
+output: dict
+(1)gt_syllable.pickle
+(2)gt_syllable_with_tone.pickle
+(3)gt_initial.pickle
+(4)gt_final.pickle
+
+### Prepare the data for sampling 
+
+```
+preprocessing.prepare_data("gt_syllable_with_tone.pickle", "result_s5.txt")
+
+```
+input:
+(1) gt_syllable.pickle or gt_syllable_with_tone.pickle
+(2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}
+
+output: 
+(1) gt_syllabus_distribution.npy 
+. real-wold syllabus distrubution. dimension: (numbers_of_syllabus, 1)
+. example:
+if the syllabus of the text corpus are "ABCCBC", then
+syllabus_key = {"A":1,"B":2,"C":3}, syllabus_key.keys() = ["A","B","C"]
+gt_syllabus_distribution = [1, 2, 3] 
+
+(2) gt_syllabus_key.pickle    # record the mapping of syllabus
+(3) sen_syllabus.npy    # record the mapping of sentences and syllabus
+. example:
+input corpus.txt:
+idx_3:AAAB    # 3A1B
+idx_5:BBC     # 2B1C
+sen_syllabus = [[3,1,0],
+                [0,2,1]]
+
+(4) sen_content.npy  # record the content
+(5) sen_idx.txt      # record the mapping of original index and new index
+.example:
+input corpus.txt:
+idx_3:AAAB   
+idx_5:BBC    
+output sen_idx.txt
+idx_3:0
+idx_5:1
+
+(1) and (3) are inputs for sampling
 
 ## Sampling
 
