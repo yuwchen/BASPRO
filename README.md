@@ -217,7 +217,7 @@ output files will be saved as result_s5.txt
 
 ## Data preparation
 
-### Calculate statistics for text corpus
+### Step 1: Calculate statistics for text corpus
 ```
 preprocessing.calculate_statistics("/path/to/raw_data.txt")
 ```
@@ -228,7 +228,7 @@ output: dict
 (3)gt_initial.pickle
 (4)gt_final.pickle
 
-### Prepare the data for sampling 
+### Step 2: Prepare the data for sampling 
 
 ```
 preprocessing.prepare_data("gt_syllable_with_tone.pickle", "result_s5.txt")
@@ -247,27 +247,78 @@ syllabus_key = {"A":1,"B":2,"C":3}, syllabus_key.keys() = ["A","B","C"]
 gt_syllabus_distribution = [1, 2, 3] 
 
 (2) gt_syllabus_key.pickle    # record the mapping of syllabus
-(3) sen_syllabus.npy    # record the mapping of sentences and syllabus
+(3) idx_syllabus.npy    # record the mapping of sentences and syllabus
 . example:
 input corpus.txt:
 idx_3:AAAB    # 3A1B
 idx_5:BBC     # 2B1C
 sen_syllabus = [[3,1,0],
                 [0,2,1]]
+(4) idx_content.npy  # record the content
+(5) idx_oriidx.npy      # record the mapping of original index and new index
 
-(4) sen_content.npy  # record the content
-(5) sen_idx.txt      # record the mapping of original index and new index
-.example:
-input corpus.txt:
-idx_3:AAAB   
-idx_5:BBC    
-output sen_idx.txt
-idx_3:0
-idx_5:1
 
 (1) and (3) are inputs for sampling
 
 ## Sampling
 
+### Adjust the hyperparameters
+
+```
+#in sampling.py file
+
+num_of_set = 20  #numbers of the set in the corpus
+num_of_sen_in_set = 20 #numbers of the sentences in a set
+population_size = 10000 #initial population size of the GA
+iteration = 500 # numbers of interation for GA
+
+truth_syllable = np.load('gt_syllabus_distribution.npy') #load the results of Data preparation Step2
+idx_syllable = np.load("idx_syllabus.npy"). #load the results of Data preparation Step2
 
 
+```
+### sampling from scratch
+
+```
+python sampling.py --outputdir output
+```
+output:
+(1) best_chro.npy  # the best chromosome (the sampled sentences index list). 
+(2) corpus.txt     # the content of best_chro. 
+(3) f_max.npy      # the maximun fitness during the training. 
+(4) f_mean.npy     # the mean fitenss during the training.    
+(5) final_chro.npy # best chromosome in the end of sampleing, usually the same as best_chro.npy. 
+
+### sampling from previous result (GA)
+
+If you want to replace some sentences in the corpus. Record the "index_in_sentence_candidates" in excluded_idx.txt files.
+
+For example, 
+after reading the sentences in corpus.txt, you want to replace "一起搭多元計程車回家" with another sentences. 
+Create a excluded_idx.txt file and write ${index_in_sentence_candidates} in the excluded_idx.txt.
+
+```
+# corpus.txt
+
+set_idx:sentence_idx:index_in_sentence_candidates:content:
+0:0:4993:一起搭多元計程車回家
+0:1:4290:比其他種類的草莓還甜
+
+# excluded_idx.txt
+4993
+
+```
+
+Run the sampling.py again. The sentence in excluded_idx.txt will be replaced by other sentences.
+
+```
+python sampling.py --initial_dir output --excluded excluded_idx.txt
+```
+
+### sampling from previous result (Greedy)
+
+If you only want to replace a few sentences in the corpus, using greedy algorithm is more effectively.
+
+```
+python greedy.py --initial_dir output --excluded excluded_idx.txt
+```
