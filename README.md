@@ -11,7 +11,7 @@ raw_data.txt example:
 也有可能包含非中文字
 ```
 
-## Preprocessing
+## Data Processing
 
 ### Step 1 General Filtering
 * Leave only sentences with ten words in Chinese
@@ -215,7 +215,7 @@ output files will be saved as result_s5.txt
 *input format: Idx#sentence{#word segmentation#pos tags#perplexity_score]#intelligibility_score*   
 *output format: Idx#sentence{#word segmentation#pos tags#perplexity_score}#intelligibility_score*  
 
-## Data preparation
+## Script composing
 
 ### Step 1: Calculate statistics for text corpus
 ```
@@ -260,7 +260,7 @@ sen_syllabus = [[3,1,0],
 
 (1) and (3) are inputs for sampling
 
-## Sampling
+## GA-based Sampling
 
 ### Adjust the hyperparameters
 
@@ -277,7 +277,7 @@ idx_syllable = np.load("idx_syllabus.npy"). #load the results of Data preparatio
 
 
 ```
-### sampling from scratch
+### Generate a new corpus
 
 ```
 python sampling.py --outputdir output
@@ -289,9 +289,17 @@ output:
 (4) f_mean.npy     # the mean fitenss during the training.    
 (5) final_chro.npy # best chromosome in the end of sampleing, usually the same as best_chro.npy. 
 
-### sampling from previous result (GA)
 
-If you want to replace some sentences in the corpus. Record the "index_in_sentence_candidates" in excluded_idx.txt files.
+
+## Post-processing (Optional)
+
+Post-processing step provide GA-based and Greedy-based method to replace some sentences in the corpus. 
+Greedy-based method is better for the condition that only a few sentences are required to be replace. 
+On the other hand, GA-based method is more suitable for the condiation that many sentences in the corpus need the replacement.
+
+### Step 1: record the unwanted sentences 
+
+Write the "index_in_sentence_candidates" in the excluded_idx.txt files.
 
 For example, 
 after reading the sentences in corpus.txt, you want to replace "一起搭多元計程車回家" with another sentences. 
@@ -306,8 +314,9 @@ set_idx:sentence_idx:index_in_sentence_candidates:content:
 
 # excluded_idx.txt
 4993
-
 ```
+
+### Step 2: GA-based replacement
 
 Run the sampling.py again. The sentence in excluded_idx.txt will be replaced by other sentences.
 
@@ -315,9 +324,9 @@ Run the sampling.py again. The sentence in excluded_idx.txt will be replaced by 
 python sampling.py --initial_dir output --excluded excluded_idx.txt
 ```
 
-### sampling from previous result (Greedy)
+### Step 2: Greedy-based replacement
 
-If you only want to replace a few sentences in the corpus, using greedy algorithm is more effectively.
+The sentence in excluded_idx.txt will be replaced by other sentences.
 
 ```
 python greedy.py --initial_dir output --excluded excluded_idx.txt
