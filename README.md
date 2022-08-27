@@ -268,10 +268,10 @@ input:
 (2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}  
 
 output:  
-(1) gt_syllabus_distribution.npy  
-. real-wold syllabus distrubution. dimension: (numbers_of_syllables, 1)  
+(1) gt_syllable_distribution.npy  
+. real-wold syllable distrubution. dimension: (numbers_of_syllables, 1)  
 . example:  
-if the syllabus of the text corpus are "ABCCBC", then  
+if the syllable of the text corpus are "ABCCBC", then  
 syllables_key = {"A":1,"B":2,"C":3}, syllables_key.keys() = ["A","B","C"]  
 gt_syllables_distribution = [1, 2, 3]  
 
@@ -281,7 +281,7 @@ gt_syllables_distribution = [1, 2, 3]
 input corpus.txt:  
 idx_3:AAAB    # 3A1B   
 idx_5:BBC     # 2B1C  
-sen_syllabus = [[3,1,0],  
+sen_syllable = [[3,1,0],  
                 [0,2,1]]  
 (4) idx_content.npy  # record the content  
 (5) idx_oriidx.npy      # record the mapping of original index and new index  
@@ -301,8 +301,8 @@ num_of_sen_in_set = 20 #numbers of the sentences in a set
 population_size = 10000 #initial population size of the GA
 iteration = 500 # numbers of interation for GA
 
-truth_syllable = np.load('gt_syllabus_distribution.npy') #load the results of Data preparation Step2
-idx_syllable = np.load("idx_syllabus.npy"). #load the results of Data preparation Step2
+truth_syllable = np.load('gt_syllable_distribution.npy') #load the results of Data preparation Step2
+idx_syllable = np.load("idx_syllable.npy"). #load the results of Data preparation Step2
 
 
 ```
