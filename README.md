@@ -2,7 +2,8 @@
 
 ## Data collection
 
-See raw_data.txt for an example of a original file
+See raw_data.txt for an example of a original file.
+
 raw_data.txt example:
 ```
 第一句話
@@ -15,6 +16,8 @@ raw_data.txt example:
 
 ### Step 1 General Filtering
 * Leave only sentences with ten words in Chinese
+* Automatically add indexes to all sentences
+
 ```
 import preprocessing
 preprocessing.general_filter(input_file_path)
@@ -26,52 +29,69 @@ preprocessing.general_filter("/path/to/raw_data.txt")
 * The processed file will be saved as result_s1.txt
 
 *input format: sentence*  
-*output format: sentence*
+*output format: Idx#sentence*
 
 ***
-### Step 2 POS Filtering
 
-#### Word segmentation & Get POS tags 
-
-* Automatically add indexes to all sentences
+### Step 2 Segmentation and POS tagging
 
 Segmentation:
 
-* [jieba](https://github.com/fxsjy/jieba)
+* [jieba](https://github.com/fxsjy/jieba)  
 ```
 preprocessing.jieba_seg("/path/to/result_s1.txt")
 ```
-. output files will be saved as {input_file_name}_jieba.txt
-*input format: sentence*
-*output format: Idx#sentence#word segmentation*
+. output files will be saved as {input_file_name}_jieba.txt  
+*input format: Idx#sentence*   
+*output format: Idx#sentence#word segmentation*  
 
 Segmentation & POS tagging:
 
-(1) [ckiptagger](https://github.com/ckiplab/ckiptagger)
+(1) [ckiptagger](https://github.com/ckiplab/ckiptagger)  
 
 ```
 preprocessing.ckip_seg("/path/to/result_s1.txt")
-```
-. output files will be saved as {input_file_name}_ckip.txt
-*input format: sentence
-*output format: Idx#sentence#word segmentation#pos tags*
+``` 
+. output files will be saved as {input_file_name}_ckip.txt  
+*input format: Idx#sentence  
+*output format: Idx#sentence#word segmentation#pos tags*  
 
 (2)[ddparser](https://github.com/baidu/DDParser)
 
+Additional requirement (Conversions between Traditional Chinese, Simplified Chinese): 
+* [opencc](https://github.com/BYVoid/OpenCC)  
+Install:
+```
+pip install LAC
+pip install ddparser
+pip install opencc
+```
+Run segmentation:
 ```
 preprocessing.baidu_seg("/path/to/result_s1.txt")
 ```
 . output files will be saved as {input_file_name}_baidu.txt  
-*input format: sentence
+*input format: Idx#sentence  
 *output format: Idx#sentence#word segmentation#pos tags*  
 
-Additional requirement (Conversions between Traditional Chinese, Simplified Chinese):
-* [opencc](https://github.com/BYVoid/OpenCC) 
-
-(Require further testing, cannot run ddparser on Mac M1)
+(Note: the ddparser cannot run on Mac M1)  
 
 
-### Filtering
+### Step 3 Sensitive Word Filtering
+
+* Remove sentences contain sensitive words (See sensitive_word_list.txt for details)
+  
+```
+preprocessing.sensitive_filter("/path/to/inputfile","/path/to/sensitive/word/list", save_rm=True)
+e.g.
+preprocessing.sensitive_filter("./result_s1_ckip.txt","./sensitive_word_list.txt" save_rm=True)
+# output file will be saved as result_s1_ckip_s3.txt
+
+```
+*input & output format: Idx#sentence#word segmentation{#pos tags}*  
+
+### Step 4 POS Filtering
+
 
 (1) Remove sentences contain words longer than 5 characters (Most Chinese words are less than five characters)  
 (2) Remove sentences contain duplicate words  
@@ -97,61 +117,59 @@ baidu POS tag: https://github.com/baidu/lac
 
 
 ```
-preprocessing.pos_seg_filter("/path/to/result_s1_jieba.txt", save_rm=True)
-#only use segmentation for filtering
-
-preprocessing.pos_seg_filter("/path/to/result_s1_ckip.txt", pos="ckip", save_rm=True)
-preprocessing.pos_seg_filter("/path/to/result_s1_baidu.txt", pos="baidu", save_rm=True)
-#use both segmentation and POS tagging for filtering
+# use ckip results only
+preprocessing.pos_seg_filter(input_path_ckip="./result_s1_ckip_s3.txt", save_rm=True)
+# or use ddparser results only
+preprocessing.pos_seg_filter(input_path_ddparser="./result_s1_ddparser.txt", save_rm=True)
+# or use both ckip and ddparser results
+preprocessing.pos_seg_filter(input_path_ckip="./result_s1_ckip_s3.txt", input_path_ddparser="./result_s1_ddparser.txt", save_rm=True)
 
 ```
-. output files will be saved as {input_file_name}_{pos}_s2.txt  
-. if save_rm=True, the removed sentences will be recorded in {input_file_name}_s2_rm.txt  
-. edit **pos_seg_filter** function in **preprocessing.py** if you want to use other criteria  
+. output files will be saved as {input_file_name}_{pos tag}_s4.txt  
+. if save_rm=True, the removed sentences will be recorded in {input_file_name}_s4_rm.txt  
+. edit **ckip_filter** or **ddparser_filter** function in **preprocessing.py** if you want to use other criteria  
 *input & output format: Idx#sentence#word segmentation#pos tags*  
 
 
 ***
-### Step 3 Sensitive Word Filtering
-* Remove sentences contain sensitive words (See sensitive_word_list.txt for details)
-  
+### Step 5 Perplexity Filtering
+
+* Step 5-0: Install pytorch transformer
 ```
-preprocessing.sensitive_filter("/path/to/inputfile", save_rm=True)
-e.g.
-preprocessing.sensitive_filter("./result_s1_ckip_s2.txt", save_rm=True)
+pip install pytorch-transformers
 ```
 
-. output file will be saved as result_s3.txt
-*input & output format: Idx#sentence#word segmentation{#pos tags}*  
-
-***
-### Step 4 Perplexity Filtering
-
-* Calculate perplexity scores
+* Step 5-1: Calculate perplexity scores
 ```
 preprocessing.get_perplexity("/path/to/inputfile")
 e.g.
-preprocessing.get_perplexity("./result_s3.txt")
-```
+preprocessing.get_perplexity("./result_s1_ckip_s3_ckipddp_s4.txt") # if you use cpu
+#or
+preprocessing.get_perplexity("./result_s1_ckip_s3_ckipddp_s4.txt", 'cuda:0') #if you use gpu
 
-. output files will be saved as {file_name}_per.txt  
+```
+Note: recommended to use gpu  
+. output files will be saved as {file_name}_per.txt   
 *input format: Idx#sentence{#word segmentation#pos tags}*  
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
-* Remove sentences have high perplexity
+* Step 5-2: Remove sentences have high perplexity
 ```
 preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 ```
-. th: threhold of perplexity filtering, default value is 4.0  
-. output files will be saved as result_s4.txt  
+. th: threshold of perplexity filtering, default value is 4.0  
+. output files will be saved as {input_file_name}_s5.txt  
 *input format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*   
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
 ***
-### Step 5 ASR Filtering
+### Step 6 Intelligibility Filtering
 
 * Select candidate sentences based on the predictions of ASR systems
-#### Step 5-1: Text to Speech
+
+<img src="https://github.com/yuwchen/BASPRO/blob/main/images/intell_filter.png" alt="main"  width=40% height=40% />
+
+#### Step 6-1: Text to Speech
 
 | Toolkit                                                      | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
 |--------------------------------------------------------------|---------|-------------------------------|--------------------------|----------------|
@@ -162,19 +180,18 @@ preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 
 
 ```
-text2speech.tts_gtts(input_file_path, save_info=True, convert_format=True)
+text2speech.tts_gtts(input_file_path, save_info=True, convert_format=True) #Set convert_format=False if you want to use the original format
 text2speech.tts_paddle(input_file_path, save_info=True)
 text2speech.tts_ttskit(input_file_path, save_info=True)
 text2speech.tts_zhtts(input_file_path, save_info=True)
 ```
-PaddleSpeech & TTSkit & Zhtts:
-(Require further testing, cannot run on  Mac M1)
+PaddleSpeech & TTSkit & Zhtts: 
+(Require further testing, cannot run on  Mac M1)  
 
-Gtts:
-. The original Gtts output format might have some problem when loading with python. 
-. Load the Gtts output waveform using librosa.load(/wav/file/path)
-. Install ffmpeg if encounter audioread.exceptions.NoBackendError when using librosa
-. Set convert_format=True to convert the gtts output wavform
+Gtts:  
+. The original Gtts output format might have some problem when loading with python.  
+. Load the Gtts output waveform using **librosa.load(/wav/file/path)**
+. Install ffmpeg if encounter **audioread.exceptions.NoBackendError** when using librosa  
 ```
 conda install -c conda-forge ffmpeg
 ```
@@ -182,10 +199,11 @@ conda install -c conda-forge ffmpeg
 . save_info=True will save the mapping between wavefile index and content in ttx_info_{toolkit}.txt  
 . output waveform will be save in {file_name}_{toolkit} directory  
 . this step might take a long time to fininsh  
+
 *input format: Idx#sentence{#word segmentation#pos tags#perplexity_score}*  
 
 
-#### Step 5-2: Calculate the intelligibility scores based on ASR results 
+#### Step 6-2: Calculate the intelligibility scores based on ASR results 
 ```
 preprocessing.calculate_asr(input_file_path, wav_dir_path)
 
@@ -206,7 +224,7 @@ Idx2#有沒有包含斷詞不影響#...#...#...
 ```
 . output file will be save as result_asr.txt
 
-#### Step 5-3: Select sentences base based on the intelligibility scores 
+#### Step 6-3: Select sentences base based on the intelligibility scores 
 ```
 preprocessing.intelligibility_filter(input_file_path, save_rm=True, th=1.0)
 ```
@@ -214,6 +232,7 @@ th: threhold of intelligibility filtering, default value is 1.0
 output files will be saved as result_s5.txt
 *input format: Idx#sentence{#word segmentation#pos tags#perplexity_score]#intelligibility_score*   
 *output format: Idx#sentence{#word segmentation#pos tags#perplexity_score}#intelligibility_score*  
+
 
 ## Script composing
 
