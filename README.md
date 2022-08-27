@@ -1,5 +1,9 @@
-# Speech Corpus
+# BASPRO: A balanced script producer for speech corpus based on the genetic algorithm
 
+<img src="https://github.com/yuwchen/BASPRO/blob/main/images/BASPRO.png" alt="main"  width=50% height=50% />
+
+
+***
 ## Data collection
 
 See raw_data.txt for an example of a original file.
@@ -58,8 +62,7 @@ preprocessing.ckip_seg("/path/to/result_s1.txt")
 
 (2)[ddparser](https://github.com/baidu/DDParser)
 
-Additional requirement (Conversions between Traditional Chinese, Simplified Chinese): 
-* [opencc](https://github.com/BYVoid/OpenCC)  
+Additional requirement (Conversions between Traditional Chinese, Simplified Chinese): [opencc](https://github.com/BYVoid/OpenCC)  
 Install:
 ```
 pip install LAC
@@ -165,18 +168,19 @@ preprocessing.perplexity_filter(input_file_path, save_rm=True, th=4.0)
 ***
 ### Step 6 Intelligibility Filtering
 
-* Select candidate sentences based on the predictions of ASR systems
+Select candidate sentences based on the intelligibility scores. The following figure shows how the intelligibility score is calculated.
 
 <img src="https://github.com/yuwchen/BASPRO/blob/main/images/intell_filter.png" alt="main"  width=40% height=40% />
 
+
 #### Step 6-1: Text to Speech
 
-| Toolkit                                                      | Quality | Speed                         | Support Taiwanese Accent | Speaker Gender |
-|--------------------------------------------------------------|---------|-------------------------------|--------------------------|----------------|
-| [Gtts](https://github.com/pndurette/gTTS)                    | High    | Fast<br>(but has limited access, ~2s/sample) | V         |Female        |
-| [Paddle Speech](https://github.com/PaddlePaddle/PaddleSpeech)|         |                               | X                        |Male & Female   | 
-| [ttskit](https://github.com/kuangdd/ttskit)                  |         |                               |                          |Male & Female   |
-| [zhtts](https://github.com/Jackiexiao/zhtts)                 | Low     |                               | V                        |Female          |
+| Toolkit                                                      | Quality    | Processing time for 10 samples| Support Taiwanese Accent | Speaker Gender |
+|--------------------------------------------------------------|------------|-------------------------------|--------------------------|----------------|
+| [Gtts](https://github.com/pndurette/gTTS)                    | Excellent  | ~20s                          | V                        |Female          |
+| [Paddle Speech](https://github.com/PaddlePaddle/PaddleSpeech)| Good       | ~92s                          | X                        |Male & Female   | 
+| [ttskit](https://github.com/kuangdd/ttskit)                  | OK         | ~22s                          | X                        |Male & Female   |
+| [zhtts](https://github.com/Jackiexiao/zhtts)                 | OK?        | ~15s                          | X                        |Female          |
 
 
 ```
@@ -185,8 +189,7 @@ text2speech.tts_paddle(input_file_path, save_info=True)
 text2speech.tts_ttskit(input_file_path, save_info=True)
 text2speech.tts_zhtts(input_file_path, save_info=True)
 ```
-PaddleSpeech & TTSkit & Zhtts: 
-(Require further testing, cannot run on  Mac M1)  
+PaddleSpeech & TTSkit & Zhtts: cannot run on  Mac M1
 
 Gtts:  
 . The original Gtts output format might have some problem when loading with python.  
@@ -205,10 +208,10 @@ conda install -c conda-forge ffmpeg
 
 #### Step 6-2: Calculate the intelligibility scores based on ASR results 
 ```
-preprocessing.calculate_asr(input_file_path, wav_dir_path)
+preprocessing.calculate_asr_and_intell(input_file_path, wav_dir_path)
 
 ```
-. this step might take a long time to fininsh  
+. this step will take a long time to fininsh. 
 . the index in the input_file_path should match the file name in the wave file directory  
 e.g.  
 ```
@@ -222,21 +225,28 @@ Idx2#有沒有包含斷詞不影響#...#...#...
 │   ...
 └── IdxN.wav
 ```
-. output file will be save as result_asr.txt
+. output file will be save as {input_file_name}_asr.txt
 
 #### Step 6-3: Select sentences base based on the intelligibility scores 
 ```
 preprocessing.intelligibility_filter(input_file_path, save_rm=True, th=1.0)
 ```
 th: threhold of intelligibility filtering, default value is 1.0
-output files will be saved as result_s5.txt
-*input format: Idx#sentence{#word segmentation#pos tags#perplexity_score]#intelligibility_score*   
-*output format: Idx#sentence{#word segmentation#pos tags#perplexity_score}#intelligibility_score*  
+output files will be saved as candidate_sentences.txt
+*input format: Idx#sentence{#word segmentation#pos tags#perplexity_score#asr_prediction_result}#intelligibility_score*   
+*output format: Idx#sentence{#word segmentation#pos tags#perplexity_score#asr_prediction_result}#intelligibility_score*  
 
 
 ## Script composing
 
 ### Step 1: Calculate statistics for text corpus
+
+#### Step 1-0: install [pypinyin](https://pypi.org/project/pypinyin/)
+```
+pip install pypinyin
+```
+
+#### Step 1-1: calculate the statistics
 ```
 preprocessing.calculate_statistics("/path/to/raw_data.txt")
 ```
@@ -259,14 +269,14 @@ input:
 
 output: 
 (1) gt_syllabus_distribution.npy 
-. real-wold syllabus distrubution. dimension: (numbers_of_syllabus, 1)
+. real-wold syllabus distrubution. dimension: (numbers_of_syllables, 1)
 . example:
 if the syllabus of the text corpus are "ABCCBC", then
-syllabus_key = {"A":1,"B":2,"C":3}, syllabus_key.keys() = ["A","B","C"]
-gt_syllabus_distribution = [1, 2, 3] 
+syllables_key = {"A":1,"B":2,"C":3}, syllables_key.keys() = ["A","B","C"]
+gt_syllables_distribution = [1, 2, 3] 
 
-(2) gt_syllabus_key.pickle    # record the mapping of syllabus
-(3) idx_syllabus.npy    # record the mapping of sentences and syllabus
+(2) gt_syllables_key.pickle    # record the mapping of syllables
+(3) idx_syllables.npy    # record the mapping of sentences and syllables
 . example:
 input corpus.txt:
 idx_3:AAAB    # 3A1B
