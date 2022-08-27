@@ -252,10 +252,10 @@ preprocessing.calculate_statistics("/path/to/raw_data.txt")
 ```
 input format: sentence
 output: dict
-(1)gt_syllable.pickle
-(2)gt_syllable_with_tone.pickle
-(3)gt_initial.pickle
-(4)gt_final.pickle
+(1)gt_syllable.pickle  
+(2)gt_syllable_with_tone.pickle  
+(3)gt_initial.pickle  
+(4)gt_final.pickle  
 
 ### Step 2: Prepare the data for sampling 
 
@@ -267,7 +267,7 @@ input:
 (1) gt_syllable.pickle or gt_syllable_with_tone.pickle  
 (2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}  
 
-output: 
+output:  
 (1) gt_syllabus_distribution.npy  
 . real-wold syllabus distrubution. dimension: (numbers_of_syllables, 1)  
 . example:  
@@ -287,7 +287,7 @@ sen_syllabus = [[3,1,0],
 (5) idx_oriidx.npy      # record the mapping of original index and new index  
 
 
-(1) and (3) are inputs for sampling
+(1), (3), (4) are inputs for sampling  
 
 ## GA-based Sampling
 
