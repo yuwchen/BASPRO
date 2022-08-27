@@ -260,31 +260,31 @@ output: dict
 ### Step 2: Prepare the data for sampling 
 
 ```
-preprocessing.prepare_data("gt_syllable_with_tone.pickle", "result_s5.txt")
-
+preprocessing.prepare_data("gt_syllable_with_tone.pickle", "result_s5.txt")  
+ 
 ```
-input:
-(1) gt_syllable.pickle or gt_syllable_with_tone.pickle
-(2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}
+input:  
+(1) gt_syllable.pickle or gt_syllable_with_tone.pickle  
+(2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}  
 
 output: 
-(1) gt_syllabus_distribution.npy 
-. real-wold syllabus distrubution. dimension: (numbers_of_syllables, 1)
-. example:
-if the syllabus of the text corpus are "ABCCBC", then
-syllables_key = {"A":1,"B":2,"C":3}, syllables_key.keys() = ["A","B","C"]
-gt_syllables_distribution = [1, 2, 3] 
+(1) gt_syllabus_distribution.npy  
+. real-wold syllabus distrubution. dimension: (numbers_of_syllables, 1)  
+. example:  
+if the syllabus of the text corpus are "ABCCBC", then  
+syllables_key = {"A":1,"B":2,"C":3}, syllables_key.keys() = ["A","B","C"]  
+gt_syllables_distribution = [1, 2, 3]  
 
-(2) gt_syllables_key.pickle    # record the mapping of syllables
-(3) idx_syllables.npy    # record the mapping of sentences and syllables
-. example:
-input corpus.txt:
-idx_3:AAAB    # 3A1B
-idx_5:BBC     # 2B1C
-sen_syllabus = [[3,1,0],
-                [0,2,1]]
-(4) idx_content.npy  # record the content
-(5) idx_oriidx.npy      # record the mapping of original index and new index
+(2) gt_syllables_key.pickle    # record the mapping of syllables  
+(3) idx_syllables.npy    # record the mapping of sentences and syllables  
+. example:  
+input corpus.txt:  
+idx_3:AAAB    # 3A1B   
+idx_5:BBC     # 2B1C  
+sen_syllabus = [[3,1,0],  
+                [0,2,1]]  
+(4) idx_content.npy  # record the content  
+(5) idx_oriidx.npy      # record the mapping of original index and new index  
 
 
 (1) and (3) are inputs for sampling
