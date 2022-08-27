@@ -268,39 +268,47 @@ input:
 (2) input_sen_list.txt with format: Idx#sentence#word segmentation{#...}  
 
 output:  
-(1) gt_syllable_distribution.npy  
-. real-world syllable distrubution. dimension: (numbers_of_syllables, 1)  
-. example:  
-If a language only contain three words, AA, BB, CC, and their corresponding phonemes are a, b, c.
-Asssumeing the crawled articles is
-```
-AA AA BB CC
-CC AA BB AA AA CC
-```
-Then, the phonemes of the articles are
-```
-a a b c
-c a b a a c
-```
-syllables_key = {"a":5,"b":2,"c":3}, syllables_key.keys() = ["a","b","c"]  
-gt_syllables_distribution = [5, 2, 3]  
-
+(1) gt_syllable_distribution.npy #real-world syllable distrubution. dimension: (numbers_of_syllables, 1)  
 (2) gt_syllables_key.pickle    # record the mapping of syllables  
 (3) idx_syllables.npy    # record the mapping of sentences and syllables  
-. example candidate sentences:  
-```
-idx_3:AA AA AA BB   
-idx_5:BB BB CC  
-```
-Then, 
-idx_syllables = [[3,1,0],  #syllable distribution of the 1st sentence in the candidate sentences file
-                 [0,2,1]]  #syllable distribution of the 2nd sentence in the candidate sentences file
 (4) idx_content.npy  # record the content   
-idx_content = [AA AA AA BB,  
-               BB BB CC]  
 (5) idx_oriidx.npy      # record the mapping of original index and new index  
 
 (1), (3), (4) are inputs for sampling  
+
+. Example:  
+
+If a language only contain three words, AA, BB, CC, and their corresponding phonemes are a, b, c. 
+Asssuming the crawled articles are:   
+```
+AA AA BB CC CC CC CC 
+CC AA BB AA AA CC CC CC CC CC
+```
+Then, the phonemes of the articles are 
+```
+a a b c c c c
+c a b a a c c c c c
+```
+The statistics of the real-world (ground-truth) condition: 
+```
+gt_syllables_key = {"a":5,"b":2,"c":10} 
+gt_syllables_key.keys() = ["a","b","c"]  
+gt_syllables_distribution = [5, 2, 10]  
+```
+
+Assuming the candidate sentences are:  
+```
+idx_3:AA BB BB
+idx_5:BB CC CC  
+```
+Then, 
+```
+idx_syllables = [[1,2,0],  #syllable distribution of the 1st sentence in the candidate sentences file
+                 [0,1,2]]  #syllable distribution of the 2nd sentence in the candidate sentences file
+
+idx_content = [AA BB BB,  
+               BB CC CC]  
+```
 
 ## GA-based Sampling
 
