@@ -19,7 +19,7 @@ raw_data.txt example:
 ## Data Processing
 
 ### Step 1 General Filtering
-* Leave only sentences with ten words in Chinese
+* Leave only sentences with ten characters in Chinese
 * Automatically add indexes to all sentences
 
 ```
