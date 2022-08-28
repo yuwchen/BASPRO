@@ -87,14 +87,13 @@ preprocessing.baidu_seg("/path/to/result_s1.txt")
 ```
 preprocessing.sensitive_filter("/path/to/inputfile","/path/to/sensitive/word/list", save_rm=True)
 e.g.
-preprocessing.sensitive_filter("./result_s1_ckip.txt","./sensitive_word_list.txt" save_rm=True)
+preprocessing.sensitive_filter("./result_s1_ckip.txt","./sensitive_word_list.txt", save_rm=True)
 # output file will be saved as result_s1_ckip_s3.txt
 
 ```
 *input & output format: Idx#sentence#word segmentation{#pos tags}*  
 
 ### Step 4 POS Filtering
-
 
 (1) Remove sentences contain words longer than 5 characters (Most Chinese words are less than five characters)  
 (2) Remove sentences contain duplicate words  
@@ -113,17 +112,17 @@ POS removal criteria
 | toolkit | include                           | start          | end                             |
 |---------|-----------------------------------|----------------|---------------------------------|
 | ckip    | 'Nb','Nc','FW'                    | 'DE','SHI','T' | 'Caa','Cab','Cba','Cbb','P','T' |
-| baidu   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
+| ddparser   | 'LOC','ORG','TIME','PER','w','nz' | 'p','u','c'    | 'xc','u'                        |
 
 ckip POS tag: https://github.com/ckiplab/ckiptagger/wiki/POS-Tags  
-baidu POS tag: https://github.com/baidu/lac    
+ddparser POS tag: https://github.com/baidu/lac    
 
 
 ```
 # use ckip results only
 preprocessing.pos_seg_filter(input_path_ckip="./result_s1_ckip_s3.txt", save_rm=True)
 # or use ddparser results only
-preprocessing.pos_seg_filter(input_path_ddparser="./result_s1_ddparser.txt", save_rm=True)
+preprocessing.pos_seg_filter(input_path_ddparser="./result_s1_ddparser_s3.txt", save_rm=True)
 # or use both ckip and ddparser results
 preprocessing.pos_seg_filter(input_path_ckip="./result_s1_ckip_s3.txt", input_path_ddparser="./result_s1_ddparser.txt", save_rm=True)
 
