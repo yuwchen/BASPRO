@@ -7,18 +7,16 @@ from pytorch_transformers import BertTokenizer, BertModel, BertForMaskedLM
 import logging
 from tqdm import tqdm
 
-#DEVICE = 'cuda:0'
-DEVICE = 'cpu'
 
 logging.basicConfig(level=logging.INFO)
 
-
 class Perplexity_Checker(object):
-    def __init__(self, MODEL_PATH):
+    def __init__(self, MODEL_PATH, DEVICE):
         self.tokenizer = BertTokenizer.from_pretrained(MODEL_PATH)
         self.model = BertForMaskedLM.from_pretrained(MODEL_PATH)
         self.model.eval()
         self.model.to(DEVICE)
+        self.DEVICE = DEVICE
 
     def sentence_preprocese(self, text):
         # Tokenize input
@@ -53,8 +51,8 @@ class Perplexity_Checker(object):
         segments_tensors = torch.tensor(segments_ids)
 
         # If you have a GPU, put everything on cuda
-        tokens_tensor = tokens_tensor.to(DEVICE)
-        segments_tensors = segments_tensors.to(DEVICE)
+        tokens_tensor = tokens_tensor.to(self.DEVICE)
+        segments_tensors = segments_tensors.to(self.DEVICE)
 
         # Predict all tokens
         with torch.no_grad():
@@ -72,10 +70,11 @@ class Perplexity_Checker(object):
         total_perplexity = -total_perplexity / (end_point - start_point)
         return total_perplexity
 
-def calculate_perplexity(input_path):
+
+def calculate_perplexity(input_path, DEVICE): 
     MODEL_PATH = 'bert-base-chinese'
     text_formatter = lambda x: "[CLS]{} [SEP]".format(x)
-    pchecker = Perplexity_Checker(MODEL_PATH)
+    pchecker = Perplexity_Checker(MODEL_PATH, DEVICE)
     sen_list = open(input_path,'r').read().splitlines()
     f_out = open(input_path.replace(".txt","_per.txt"),'w')
     for line in tqdm(sen_list):

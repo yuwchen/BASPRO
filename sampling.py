@@ -5,18 +5,19 @@ import random
 import argparse
 import numpy as np
 
-num_of_set = 20  #numbers of the set in the corpus
-num_of_sen_in_set = 20 #numbers of the sentences in a set
-population_size = 100 #initial population size of the GA
-iteration = 50 # numbers of interation for GA
+num_of_set = 5  #numbers of the set in the corpus
+num_of_sen_in_set = 5 #numbers of the sentences in a set
+population_size = 10 #initial population size of the GA
+iteration = 10 # numbers of interation for GA
 
 #truth_syllable: distribution that close to real-world condition
 truth_syllable = np.load('gt_syllable_distribution.npy') 
 num_of_syllable = truth_syllable.shape[0]
-
+print(truth_syllable.shape)
 #idx_syllable: the mapping between a sentence index and the corresponding syllabus distribution
-idx_syllable = np.load("idx_syllales.npy")
+idx_syllable = np.load("idx_syllables.npy")
 num_of_total_sen = idx_syllable.shape[0]
+print(idx_syllable.shape)
 
 #idx_content: the mapping between a sentence index and the corresponding content
 idx_content = np.load("idx_content.npy")
@@ -280,7 +281,7 @@ if __name__ == '__main__':
         f_mean, f_max, best_chromosome = calculate_population_fitness(population)
         print("iter",iter, f_mean, f_max)
 
-        f_out.write(+str(f_max)+":"+str(f_mean)+"\n")
+        f_out.write(str(f_max)+":"+str(f_mean)+"\n")
 
 
         if f_max > f_best:
@@ -302,7 +303,7 @@ if __name__ == '__main__':
 
 
     f_corpus = open(os.path.join(output_path,'corpus.txt'),'w')
-    f_corpus.write("index_in_sentence_candidates:"+"set_idx:"+"sentence_idx:"+"content:"+'\n')
+    f_corpus.write("index_in_sentence_candidates:"+"set_idx:"+"sentence_idx:"+"content"+'\n')
     result_content = idx_content[best_chromosome]
     for set_idx in range(result_content.shape[0]):
         for sen_idx in range(result_content.shape[1]):

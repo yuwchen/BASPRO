@@ -11,8 +11,8 @@ idx_syllable = np.load("idx_syllables.npy") #the mapping between a sentence inde
 
 num_of_syllable = truth_syllable.shape[0]
 
-num_of_set = 20
-num_of_sen_in_set=20
+num_of_set = 5
+num_of_sen_in_set=5
 dis_weight = 1
 coverage_weight = 2
 dis_weight_set=1
