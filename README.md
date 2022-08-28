@@ -297,13 +297,13 @@ gt_syllables_distribution = [5, 2, 10]
 
 Assuming the candidate sentences are:  
 ```
-idx_3:AA BB BB
-idx_5:BB CC CC  
+idx_3#AA BB BB
+idx_5#BB CC CC  
 ```
 Then, 
 ```
-idx_syllables = [[1,2,0],  #syllable distribution of the 1st sentence in the candidate sentences file
-                 [0,1,2]]  #syllable distribution of the 2nd sentence in the candidate sentences file
+idx_syllables = [[1,2,0],  #syllable distribution of the 1st sentence in the candidate sentences file  
+                 [0,1,2]]  #syllable distribution of the 2nd sentence in the candidate sentences file 
 
 idx_content = [AA BB BB,  
                BB CC CC]  
@@ -321,8 +321,8 @@ num_of_sen_in_set = 20 #numbers of the sentences in a set
 population_size = 10000 #initial population size of the GA
 iteration = 500 # numbers of interation for GA
 
-truth_syllable = np.load('gt_syllable_distribution.npy') #load the results of Data preparation Step2
-idx_syllable = np.load("idx_syllable.npy"). #load the results of Data preparation Step2
+truth_syllable = np.load('gt_syllable_distribution.npy') #load the results of Data preparation Step2  
+idx_syllable = np.load("idx_syllable.npy"). #load the results of Data preparation Step2 
 
 
 ```
@@ -332,11 +332,10 @@ idx_syllable = np.load("idx_syllable.npy"). #load the results of Data preparatio
 python sampling.py --outputdir output
 ```
 output:
-(1) best_chro.npy  # the best chromosome (the sampled sentences index list). 
-(2) corpus.txt     # the content of best_chro. 
-(3) f_max.npy      # the maximun fitness during the training. 
-(4) f_mean.npy     # the mean fitenss during the training.    
-(5) final_chro.npy # best chromosome in the end of sampleing, usually the same as best_chro.npy. 
+(1) best_chro.npy  # the best chromosome (the sampled sentences index list)  
+(2) corpus.txt     # the content of best_chro   
+(3) log.txt        # the training history  
+(4) final_chro.npy # best chromosome in the end of sampleing, usually the same as best_chro.npy   
 
 
 
