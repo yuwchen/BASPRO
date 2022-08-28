@@ -13,11 +13,10 @@ iteration = 10 # numbers of interation for GA
 #truth_syllable: distribution that close to real-world condition
 truth_syllable = np.load('gt_syllable_distribution.npy') 
 num_of_syllable = truth_syllable.shape[0]
-print(truth_syllable.shape)
+
 #idx_syllable: the mapping between a sentence index and the corresponding syllabus distribution
 idx_syllable = np.load("idx_syllables.npy")
 num_of_total_sen = idx_syllable.shape[0]
-print(idx_syllable.shape)
 
 #idx_content: the mapping between a sentence index and the corresponding content
 idx_content = np.load("idx_content.npy")
