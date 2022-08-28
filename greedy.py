@@ -126,9 +126,9 @@ if __name__ == '__main__':
     final_fitness, distribution_score, distribution_score_set, converage_score = calculate_fitness(chromosome, True)
     f_out.write("final_fitness:"+str(final_fitness)+" distribution_score:"+str(distribution_score)+" distribution_score_set:"+str(distribution_score_set)+" converage_score:"+str(converage_score)+"\n")
     
-    np.save(os.path.join(outputdir,"best_chro_greedy.npy"),chromosome)
+    np.save(os.path.join(outputdir,"best_chro.npy"),chromosome)
 
-    f_corpus = open(os.path.join(outputdir,'corpus_greedy.txt'),'w')
+    f_corpus = open(os.path.join(outputdir,'corpus.txt'),'w')
     f_corpus.write("index_in_sentence_candidates:"+"set_idx:"+"sentence_idx:"+"content:"+'\n')
     for set_idx in range(chromosome.shape[0]):
         for sen_idx in range(chromosome.shape[1]):
