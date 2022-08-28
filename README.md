@@ -290,8 +290,8 @@ c a b a a c c c c c
 ```
 The statistics of the real-world (ground-truth) condition: 
 ```
-gt_syllables_key = {"a":5,"b":2,"c":10} 
-gt_syllables_key.keys() = ["a","b","c"]  
+gt_syllables = {"a":5,"b":2,"c":10} 
+gt_syllables.keys() = ["a","b","c"]  
 gt_syllables_distribution = [5, 2, 10]  
 ```
 
