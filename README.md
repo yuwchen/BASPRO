@@ -71,9 +71,9 @@ pip install opencc
 ```
 Run segmentation:
 ```
-preprocessing.baidu_seg("/path/to/result_s1.txt")
+preprocessing.ddparser_seg("/path/to/result_s1.txt")
 ```
-. output files will be saved as {input_file_name}_baidu.txt  
+. output files will be saved as {input_file_name}_ddparser.txt  
 *input format: Idx#sentence  
 *output format: Idx#sentence#word segmentation#pos tags*  
 
