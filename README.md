@@ -260,7 +260,7 @@ output: dict
 ### Step 2: Prepare the data for sampling 
 
 ```
-preprocessing.prepare_data("gt_syllable_with_tone.pickle", "result_s5.txt")  
+preprocessing.prepare_data("gt_syllable_with_tone.pickle", "candidate_sentences.txt")  
  
 ```
 input:  
