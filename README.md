@@ -57,9 +57,11 @@ Segmentation & POS tagging:
 ```
 preprocessing.ckip_seg("/path/to/result_s1.txt")
 ``` 
+. aftering downloading, you will find a directory named **data**, which contains the models used in the ckiptagger. You need to change the **ckip_model_path** in **preprocessing.ckip_seg()** to the path of **data** directory. Or, put the **data** directory in the same directory as the preprocessing.py and then change the name of model directory to **ckip_data**.  
 . output files will be saved as {input_file_name}_ckip.txt  
 *input format: Idx#sentence  
 *output format: Idx#sentence#word segmentation#pos tags*  
+
 
 (2)[ddparser](https://github.com/baidu/DDParser)
 
