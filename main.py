@@ -26,9 +26,8 @@ if __name__ == '__main__':
     #text2speech.tts_ttskit("result_s1_ckip_s3_ckipddp_s4_per_s5.txt")
     #text2speech.tts_paddle("result_s1_ckip_s3_ckipddp_s4_per_s5.txt")
 
-    #preprocessing.calculate_asr_and_intell("result_s1_ckip_s3_ckipddp_s4_per_s5_small.txt", "./result_s1_ckip_s3_ckipddp_s4_per_s5_small_gtts")
-    #preprocessing.intelligibility_filter("result_s1_ckip_s3_ckipddp_s4_per_s5_small_asr.txt")
+    #preprocessing.calculate_asr_and_intell("result_s1_ckip_s3_ckipddp_s4_per_s5.txt", "./result_s1_ckip_s3_ckipddp_s4_per_s5_gtts")
+    #preprocessing.intelligibility_filter("result_s1_ckip_s3_ckipddp_s4_per_s5_asr.txt")
 
     #preprocessing.calculate_statistics("./raw_data.txt")
     #preprocessing.prepare_data_for_sampling("./gt_syllable_with_tone.pickle", "./candidate_sentences.txt")
-    #preprocessing.prepare_data_for_sampling("./gt_syllable_with_tone.pickle", "./result_s1_ckip_s3_ckipddp_s4.txt")
