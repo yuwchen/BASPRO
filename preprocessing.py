@@ -357,10 +357,8 @@ def calculate_asr_and_intell(input_path, wav_dir_path, auto_corr=True):
                     asr_result = r.recognize_google(audio, language='zh-TW')
 
                 if auto_corr:
-                    import pycorrector
                     import opencc
                     import cn2an
-                    asr_result, _ = pycorrector.correct(asr_result)
                     asr_result = cn2an.transform(asr_result, "an2cn")
                     s2t = opencc.OpenCC('s2t.json')
                     asr_result = s2t.convert(asr_result)  
