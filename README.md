@@ -360,9 +360,9 @@ python greedy.py --initial_dir output --excluded excluded_idx.txt
 
 ## Working on recording script of language other than Mandrian Chinese
 (1) Collect a large text dataset you think can represent the real-world condition or the domain you want.   
-(2) Design your own data processing method and extract the candidate sentences from the dataset you collected.   
-(3) Calculate the phoneme, syllable, or other characteristics distribution of the dataset you collected. 
-(4) Create the gt_syllable_distribution.npy (the distribution you want to learn), idx_syllables.npy (the distribution of each candidate sentence), and idx_content.npy (the content of candidate sentence) as the following format:  
+(2) Design your own data processing method and extract the candidate sentences from the dataset you collected.    
+(3) Calculate the phoneme, syllable, or other characteristics distribution of the dataset you collected.  
+(4) Create the gt_syllable_distribution.npy (the distribution you want to learn), idx_syllables.npy (the distribution of each candidate sentence), and idx_content.npy (the content of candidate sentence) as the following format:    
 
 . Example:  
 
