@@ -316,7 +316,7 @@ def perplexity_filter(input_path, save_rm=True, th=4.0):
         else:
             f_out.write(line+"\n")
 
-def calculate_asr_and_intell(input_path, wav_dir_path):
+def calculate_asr_and_intell(input_path, wav_dir_path, auto_corr=True):
     """
     Calculate the ASR of the utterances and the intelligibility score
     input (str, str): path to input sentences,  path to utterance directory
@@ -355,6 +355,16 @@ def calculate_asr_and_intell(input_path, wav_dir_path):
                 with sr.AudioFile(output_tmp_file) as source:
                     audio = r.record(source)
                     asr_result = r.recognize_google(audio, language='zh-TW')
+
+                if auto_corr:
+                    import pycorrector
+                    import opencc
+                    import cn2an
+                    asr_result, _ = pycorrector.correct(asr_result)
+                    asr_result = cn2an.transform(asr_result, "an2cn")
+                    s2t = opencc.OpenCC('s2t.json')
+                    asr_result = s2t.convert(asr_result)  
+
                 intell_score = ratio(sen, asr_result)
                 f_out.write(line+"#"+asr_result+"#"+str(intell_score)+"\n")
             except Exception as e:
