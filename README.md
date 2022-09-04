@@ -94,7 +94,7 @@ preprocessing.sensitive_filter("./result_s1_ckip.txt","./sensitive_word_list.txt
 # output file will be saved as result_s1_ckip_s3.txt
 
 ```
-*input & output format: Idx#sentence#word segmentation{#pos tags}*  
+*input & output format: Idx#sentence#word segmentation#{pos tags}*  
 
 ### Step 4 POS Filtering
 
@@ -155,7 +155,7 @@ preprocessing.get_perplexity("./result_s1_ckip_s3_ckipddp_s4.txt", 'cuda:0') #if
 ```
 Note: recommended to use gpu  
 . output files will be saved as {file_name}_per.txt   
-*input format: Idx#sentence{#word segmentation#pos tags}*  
+*input format: Idx#sentence#{word segmentation#pos tags}*  
 *output format: Idx#sentence{#word segmentation#pos tags}#perplexity_score*  
 
 * Step 5-2: Remove sentences have high perplexity
@@ -210,9 +210,10 @@ conda install -c conda-forge ffmpeg
 
 #### Step 6-2: Calculate the intelligibility scores based on ASR results 
 ```
-preprocessing.calculate_asr_and_intell(input_file_path, wav_dir_path)
+preprocessing.calculate_asr_and_intell(input_file_path, wav_dir_path, auto_corr=True)
 
 ```
+. install [cn2an](https://github.com/Ailln/cn2an), and [opencc](https://github.com/BYVoid/OpenCC) if you set **auto_corr=True**. auto_corr=True will automatically convert the Arabic numerals in ASR prediction to Chinese numerals.
 . this step will take a long time to fininsh. 
 . the index in the input_file_path should match the file name in the wave file directory  
 e.g.  
@@ -353,17 +354,18 @@ On the other hand, GA-based method is more suitable for the condiation that many
 Write the "index_in_sentence_candidates" in the excluded_idx.txt files.
 
 For example, 
-after reading the sentences in corpus.txt, you want to replace "一起搭多元計程車回家" with another sentences. 
-Create a excluded_idx.txt file and write ${index_in_sentence_candidates} in the excluded_idx.txt.
+after reading the sentences in corpus.txt, you want to replace "一起搭多元計程車回家" (index_in_sentence_candidates=4993) with another sentences. 
+Create a text file (e.g. excluded_idx.txt) and record the ${index_in_sentence_candidates}.
 
 ```
-# corpus.txt
+# corpus.txt (output of the sampling step)
 
-set_idx:sentence_idx:index_in_sentence_candidates:content:
-0:0:4993:一起搭多元計程車回家
-0:1:4290:比其他種類的草莓還甜
+index_in_sentence_candidates:set_idx:sentence_idx:content
+4993:0:0:一起搭多元計程車回家
+4290:0:1:比其他種類的草莓還甜
+1899:0:2:他是七十一歲的老先生
 
-# excluded_idx.txt
+# excluded_idx.txt (separate the indexes with line)
 4993
 ```
 
