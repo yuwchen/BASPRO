@@ -7,10 +7,13 @@ How to use BASPRO?[(中文)](https://www.youtube.com/watch?v=AQ0GGtgwU-c)
 ***
 ## Data collection
 
+Collect your own data. The final script will consist of the data you collect.   
+
 See raw_data.txt for an example of a original file.
 
-raw_data.txt example:
 ```
+#raw_data.txt
+
 第一句話
 換行後是下一句
 每句的長度有可能不同
@@ -213,9 +216,9 @@ conda install -c conda-forge ffmpeg
 preprocessing.calculate_asr_and_intell(input_file_path, wav_dir_path, auto_corr=True)
 
 ```
-. install [cn2an](https://github.com/Ailln/cn2an), and [opencc](https://github.com/BYVoid/OpenCC) if you set **auto_corr=True**. auto_corr=True will automatically convert the Arabic numerals in ASR prediction to Chinese numerals.
-. this step will take a long time to fininsh. 
-. the index in the input_file_path should match the file name in the wave file directory  
+. install [cn2an](https://github.com/Ailln/cn2an), and [opencc](https://github.com/BYVoid/OpenCC) if you set **auto_corr=True**. auto_corr=True will automatically convert the Arabic numerals in ASR prediction to Chinese numerals  
+. this step will take a long time to fininsh   
+. the index in the input_file_path should match the file name in the wave file directory    
 e.g.  
 ```
 * input_file.txt
@@ -254,7 +257,7 @@ pip install pypinyin
 preprocessing.calculate_statistics("/path/to/raw_data.txt")
 ```
 input format: sentence
-output: dict
+output: dict  
 (1)gt_syllable.pickle  
 (2)gt_syllable_with_tone.pickle  
 (3)gt_initial.pickle  
@@ -279,39 +282,6 @@ output:
 
 (1), (3), (4) are inputs for sampling  
 
-. Example:  
-
-If a language only contain three words, AA, BB, CC, and their corresponding phonemes are a, b, c. 
-Asssuming the crawled articles are:   
-```
-AA AA BB CC CC CC CC 
-CC AA BB AA AA CC CC CC CC CC
-```
-Then, the phonemes of the articles are 
-```
-a a b c c c c
-c a b a a c c c c c
-```
-The statistics of the real-world (ground-truth) condition: 
-```
-gt_syllables = {"a":5,"b":2,"c":10} 
-gt_syllables.keys() = ["a","b","c"]  
-gt_syllables_distribution = [5, 2, 10]  
-```
-
-Assuming the candidate sentences are:  
-```
-idx_3#AA BB BB
-idx_5#BB CC CC  
-```
-Then, 
-```
-idx_syllables = [[1,2,0],  #syllable distribution of the 1st sentence in the candidate sentences file  
-                 [0,1,2]]  #syllable distribution of the 2nd sentence in the candidate sentences file 
-
-idx_content = [AA BB BB,  
-               BB CC CC]  
-```
 
 ## GA-based Sampling
 
@@ -384,3 +354,50 @@ The sentence in excluded_idx.txt will be replaced by other sentences.
 ```
 python greedy.py --initial_dir output --excluded excluded_idx.txt
 ```
+
+
+***
+
+## Working on recording script of language other than Mandrian Chinese
+(1) Collect a large text dataset you think can represent the real-world condition or the domain you want.   
+(2) Design your own data processing method and extract the candidate sentences from the dataset you collected.   
+(3) Calculate the phoneme, syllable, or other characteristics distribution of the dataset you collected. 
+(4) Create the gt_syllable_distribution.npy (the distribution you want to learn), idx_syllables.npy (the distribution of each candidate sentence), and idx_content.npy (the content of candidate sentence) as the following format:  
+
+. Example:  
+
+If a language only contain three words, AA, BB, CC, and their corresponding phonemes are a, b, c. 
+Asssuming the crawled articles are:   
+```
+AA AA BB CC CC CC CC 
+CC AA BB AA AA CC CC CC CC CC
+```
+Then, the phonemes of the articles are 
+```
+a a b c c c c
+c a b a a c c c c c
+```
+The statistics of the real-world (ground-truth) condition: 
+```
+gt_syllables = {"a":5,"b":2,"c":10} 
+gt_syllables.keys() = ["a","b","c"]  
+
+gt_syllables_distribution = [5, 2, 10]
+
+```
+
+Assuming the candidate sentences are:  
+```
+idx_3#AA BB BB
+idx_5#BB CC CC  
+```
+Then, 
+```
+idx_syllables = [[1,2,0],  #syllable distribution of the 1st sentence in the candidate sentences file  
+                 [0,1,2]]  #syllable distribution of the 2nd sentence in the candidate sentences file 
+
+idx_content = [AA BB BB,  
+               BB CC CC]  
+```
+(5) Change the hyperparameters in sampling.py and run the sampling.py
+
