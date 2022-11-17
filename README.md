@@ -1,4 +1,4 @@
-# BASPRO: A balanced script producer for speech corpus based on the genetic algorithm
+# BASPRO: A balanced script producer for speech corpus collection based on the genetic algorithm
 
 <img src="https://github.com/yuwchen/BASPRO/blob/main/images/BASPRO.png" alt="main"  width=50% height=50% />
 
