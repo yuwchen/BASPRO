@@ -2,6 +2,7 @@
 
 <img src="https://github.com/yuwchen/BASPRO/blob/main/images/BASPRO.png" alt="main"  width=50% height=50% />
 
+Paper link: [arxiv](https://arxiv.org/abs/2301.04120)  
 How to use BASPRO?[(中文)](https://www.youtube.com/watch?v=AQ0GGtgwU-c)
 
 ***
